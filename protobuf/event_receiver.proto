@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+service EventReceiver {
+    rpc SendEvents(EventList) returns (google.protobuf.Empty) {}
+}
+
+enum Stimulus {
+    BUTTON_CLICK = 0;
+    FORM_SUMBISSION = 1;
+    PAGE_LOAD = 2;
+    DATA_ENTRY = 3;
+    SYSTEM_BOOT = 4;
+    FILE_UPLOAD = 5;
+    DROPDOWN_SELECTION = 6;
+}
+
+enum Target {
+    USER_INTERFACE = 0;
+    DATABASE_CONNECTOR = 1;
+    AUTHENTICATION_MODULE = 2;
+    DATA_PROCESSING_UNIT = 3;
+    NETWORK_ADAPTER = 4;
+    STORAGE_MANAGER = 5;
+    SECURITY_MODULE = 6;
+}
+
+message Event {
+    int64 date = 1;
+    int32 user_id = 2;
+    Stimulus stimulus = 3;
+    Target target = 4;
+}
+
+message EventList {
+    repeated Event events = 1;
+}
