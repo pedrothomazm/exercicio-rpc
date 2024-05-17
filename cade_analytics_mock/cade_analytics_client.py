@@ -71,9 +71,7 @@ def convert_and_send_events(events, stub):
 
     # List of events in protobuf format, we package them in EventList
     event_list = event_receiver_pb2.EventList(events=events)
-    response = stub.SendEvents(event_list)
-
-    print("Response: %s" % response)
+    stub.SendEvents(event_list)
 
 
 def run_test(num_threads):
