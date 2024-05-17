@@ -1,4 +1,6 @@
 from concurrent import futures
+from datetime import datetime
+import threading
 
 import sys
 import pandas as pd
@@ -12,6 +14,7 @@ Empty = event_receiver_pb2.google_dot_protobuf_dot_empty__pb2.Empty
 
 # Initialize a DataFrame to store events
 events_df = pd.DataFrame(columns = ["date", "user_id", "stimulus", "target"])
+df_lock = threading.Lock()
 
 # Classe que implementa o serviço gRPC
 class EventReceiverServicer(event_receiver_pb2_grpc.EventReceiverServicer):
@@ -33,7 +36,7 @@ class EventReceiverServicer(event_receiver_pb2_grpc.EventReceiverServicer):
         # Append new events to the DataFrame
         for event in request.events:
             new_events.append({
-                "date": event.date,
+                "date": datetime.fromtimestamp(event.date),
                 "user_id": event.user_id,
                 "stimulus": event.stimulus,
                 "target": event.target
@@ -41,7 +44,8 @@ class EventReceiverServicer(event_receiver_pb2_grpc.EventReceiverServicer):
 
         # Convert list of dictionaries to DataFrame and concatenate with the existing DataFrame
         new_events_df = pd.DataFrame(new_events)
-        events_df = pd.concat([events_df, new_events_df], ignore_index=True)
+        with df_lock:
+            events_df = pd.concat([events_df, new_events_df], ignore_index=True)
 
         print("Received events: %s" % request)
         
