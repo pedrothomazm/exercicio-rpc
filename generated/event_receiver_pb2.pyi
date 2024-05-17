@@ -10,7 +10,7 @@ DESCRIPTOR: _descriptor.FileDescriptor
 class Stimulus(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     BUTTON_CLICK: _ClassVar[Stimulus]
-    FORM_SUMBISSION: _ClassVar[Stimulus]
+    FORM_SUBMISSION: _ClassVar[Stimulus]
     PAGE_LOAD: _ClassVar[Stimulus]
     DATA_ENTRY: _ClassVar[Stimulus]
     SYSTEM_BOOT: _ClassVar[Stimulus]
@@ -27,7 +27,7 @@ class Target(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     STORAGE_MANAGER: _ClassVar[Target]
     SECURITY_MODULE: _ClassVar[Target]
 BUTTON_CLICK: Stimulus
-FORM_SUMBISSION: Stimulus
+FORM_SUBMISSION: Stimulus
 PAGE_LOAD: Stimulus
 DATA_ENTRY: Stimulus
 SYSTEM_BOOT: Stimulus

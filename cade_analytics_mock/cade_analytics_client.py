@@ -39,7 +39,7 @@ def generate_mock_events(num_events: int) -> List[event_receiver_pb2.Event]:
         List of event_receiver_pb2.Event: List of gRPC-compatible event objects.
     """
     event_stimulus = [
-        "BUTTON_CLICK", "FORM_SUMBISSION", "PAGE_LOAD", "DATA_ENTRY",
+        "BUTTON_CLICK", "FORM_SUBMISSION", "PAGE_LOAD", "DATA_ENTRY",
         "SYSTEM_BOOT", "FILE_UPLOAD", "DROPDOWN_SELECTION"
     ]
     event_targets = [
