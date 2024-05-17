@@ -7,6 +7,8 @@ import event_receiver_pb2_grpc
 from typing import List
 import datetime
 import random
+import threading
+import time
 
 
 def generate_random_date(start: datetime.datetime = datetime.datetime(2020, 1, 1), end: datetime.datetime = datetime.datetime.now()) -> int:
@@ -67,22 +69,58 @@ def convert_and_send_events(events, stub):
         stub: Stub of the gRPC service to send events.
     """
 
-    # Lista de eventos no formato di protobuf, os empacotamos em EventList
+    # List of events in protobuf format, we package them in EventList
     event_list = event_receiver_pb2.EventList(events=events)
     response = stub.SendEvents(event_list)
 
     print("Response: %s" % response)
 
 
-def run_test():
+def run_test(num_threads):
     """
-    Main function to run the gRPC client.
+    Runs multiple gRPC client instances in parallel and measures response time.
+
+    Args:
+        num_threads (int): Number of threads to run in parallel.
     """
-    channel = grpc.insecure_channel("localhost:50051")
-    stub = event_receiver_pb2_grpc.EventReceiverStub(channel)
-    # Gerar eventos mockados e enviá-los
-    mock_events = generate_mock_events(5)  # Gera 5 eventos (testando)
-    convert_and_send_events(mock_events, stub)
+    def client_thread(results, index):
+        channel = grpc.insecure_channel("localhost:50051")
+        stub = event_receiver_pb2_grpc.EventReceiverStub(channel)
+
+        # Start time
+        start_time = time.time()
+
+        mock_events = generate_mock_events(random.randint(1, 21))  # Generates a random number of events per thread
+        convert_and_send_events(mock_events, stub)
+
+        # Final time
+        end_time = time.time()
+
+        # Execution duration
+        results[index] = end_time - start_time
+        channel.close()
+
+    # List to store the results
+    results = [0] * num_threads  
+    threads = []
+
+    # Start threads
+    for i in range(num_threads):
+        thread = threading.Thread(target=client_thread, args=(results, i))
+        thread.start()
+        threads.append(thread)
+
+    # Wait for all threads to finish
+    for thread in threads:
+        thread.join()
+
+    # Calculate average response time
+    average_time = sum(results) / num_threads
+    print(f"Average response time with {num_threads} threads: {average_time:.4f} seconds")
 
 if __name__ == "__main__":
-    run_test()
+    # Gradually increase the number of threads from 1 to 20
+    for i in range(1, 21):  
+        print(f"Testing with {i} threads...")
+        run_test(i)
+
