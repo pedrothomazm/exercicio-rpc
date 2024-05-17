@@ -8,7 +8,7 @@ service EventReceiver {
 
 enum Stimulus {
     BUTTON_CLICK = 0;
-    FORM_SUMBISSION = 1;
+    FORM_SUBMISSION = 1;
     PAGE_LOAD = 2;
     DATA_ENTRY = 3;
     SYSTEM_BOOT = 4;

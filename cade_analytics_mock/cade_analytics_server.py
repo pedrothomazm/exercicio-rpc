@@ -1,11 +1,13 @@
 from concurrent import futures
 
 import sys
-sys.path.append('generated')
+sys.path.append("generated")
 
 import grpc
 import event_receiver_pb2
 import event_receiver_pb2_grpc
+
+Empty = event_receiver_pb2.google_dot_protobuf_dot_empty__pb2.Empty
 
 
 # Classe que implementa o serviço gRPC
@@ -14,7 +16,7 @@ class EventReceiverServicer(event_receiver_pb2_grpc.EventReceiverServicer):
         # TODO: Implementar a lógica de processamento dos eventos aqui
         # Imprime para confirmar que os eventos foram recebidos
         print("Received events: %s" % request)
-        return event_receiver_pb2.Empty()
+        return Empty()
 
 
 def serve():
