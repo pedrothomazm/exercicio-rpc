@@ -40,6 +40,14 @@ Siga os passos abaixo para configurar e executar o ambiente do projeto:
      ```
      python cade_analytics_mock/cade_analytics_client.py
      ```
+     
+   - Após iniciar o cliente, você será solicitado a fornecer algumas configurações específicas para a conexão:
+
+     - **Endereço IP do Servidor gRPC:** Você deve inserir o endereço IP do servidor onde o servidor gRPC está sendo executado. Por exemplo, se o servidor estiver sendo executado em uma máquina local, você pode usar `127.0.0.1` ou o endereço IP externo se estiver em outra máquina.
+       
+     - **Porta do Servidor gRPC:** Insira a porta na qual o servidor gRPC está escutando. O valor padrão geralmente é `50051`, a menos que você tenha configurado uma porta diferente.
+       
+     - **Quantas Repetições Deseja Executar:** Indique quantas vezes você deseja que o teste seja repetido. Isso é útil para executar múltiplas iterações e obter uma média de desempenho.
 
 5. **Análise de Resultados:**
    - Observe os resultados impressos em ambos os terminais para verificar se tudo está funcionando corretamente.
