@@ -74,15 +74,17 @@ def convert_and_send_events(events, stub):
     stub.SendEvents(event_list)
 
 
-def run_test(num_threads):
+def run_test(ip_address: str, port: str, num_threads: int) -> float:
     """
     Runs multiple gRPC client instances in parallel and measures response time.
 
     Args:
+        ip_address (str): IP address of the gRPC server.
+        port (str): Port of the gRPC server.
         num_threads (int): Number of threads to run in parallel.
     """
     def client_thread(results, index):
-        channel = grpc.insecure_channel("localhost:50051")
+        channel = grpc.insecure_channel(f"{ip_address}:{port}")
         stub = event_receiver_pb2_grpc.EventReceiverStub(channel)
 
         # Start time
@@ -114,11 +116,22 @@ def run_test(num_threads):
 
     # Calculate average response time
     average_time = sum(results) / num_threads
-    print(f"Average response time with {num_threads} threads: {average_time:.4f} seconds")
+    return average_time
 
 if __name__ == "__main__":
+    print("What is the IP address of the gRPC server? ", end="")
+    ip_address = input()
+    print("What is the port of the gRPC server? ", end="")
+    port = input()
+    print("How many repetitions do you want to run? ", end="")
+    repetitions = int(input())
+    
     # Gradually increase the number of threads from 1 to 20
     for i in range(1, 21):  
         print(f"Testing with {i} threads...")
-        run_test(i)
+        total_time = 0
+        for _ in range(repetitions):
+            total_time += run_test(ip_address, port, i)
+        average_time = total_time / repetitions
+        print(f"Average response time: {average_time:.6f} seconds")
 

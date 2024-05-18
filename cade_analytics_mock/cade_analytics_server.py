@@ -57,12 +57,15 @@ class EventReceiverServicer(event_receiver_pb2_grpc.EventReceiverServicer):
         return Empty()
 
 
-def serve():
+def serve(port):
     """
     Starts the gRPC server and listens for client connections.
 
     This function sets up the server with a specified number of worker threads to handle incoming RPCs concurrently.
     The server binds to a specified port to listen for client requests and remains running until manually terminated.
+    
+    Args:
+        port (int): The port number on which the server listens for client connections.
     """
 
     # Create a gRPC server with a thread pool executor to handle concurrent calls
@@ -74,8 +77,8 @@ def serve():
     )
 
     # Bind the server to a port on all interfaces
-    ## listening on port 50051 on all available IPv4 and IPv6 addressess
-    server.add_insecure_port("[::]:50051")
+    ## listening on all available IPv4 and IPv6 addressess
+    server.add_insecure_port(f"[::]:{port}")
 
     # Non-blocking call => server runs in the background
     server.start()
@@ -118,13 +121,16 @@ def continuous_analysis(interval=10):
 
 
 def main():
+    print("What is the port number to start the gRPC server? ", end="")
+    port = input()
+    
     # Start the continuous analysis thread as a daemon, so
     # it stops when the main thread stops
     analysis_thread = threading.Thread(target=continuous_analysis, daemon=True)
     analysis_thread.start()
 
     # Start the gRPC server
-    serve()
+    serve(port)
 
 
 if __name__ == "__main__":
